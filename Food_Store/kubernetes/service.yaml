@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Food_Store
+  labels:
+    app: Food_Store
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: Food_Store
