@@ -5,12 +5,8 @@ import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
 import untitled.FoodStoreApplication;
-import untitled.domain.BeginCooking;
-import untitled.domain.EndCooking;
-import untitled.domain.OrderAccepted;
 import untitled.domain.OrderCancelled;
 import untitled.domain.OrderInfoReceived;
-import untitled.domain.OrderRejected;
 
 @Entity
 @Table(name = "StoreOrder_table")
@@ -44,20 +40,8 @@ public class StoreOrder {
         OrderInfoReceived orderInfoReceived = new OrderInfoReceived(this);
         orderInfoReceived.publishAfterCommit();
 
-        OrderAccepted orderAccepted = new OrderAccepted(this);
-        orderAccepted.publishAfterCommit();
-
-        OrderRejected orderRejected = new OrderRejected(this);
-        orderRejected.publishAfterCommit();
-
         OrderCancelled orderCancelled = new OrderCancelled(this);
         orderCancelled.publishAfterCommit();
-
-        BeginCooking beginCooking = new BeginCooking(this);
-        beginCooking.publishAfterCommit();
-
-        EndCooking endCooking = new EndCooking(this);
-        endCooking.publishAfterCommit();
     }
 
     public static StoreOrderRepository repository() {
@@ -65,6 +49,26 @@ public class StoreOrder {
             StoreOrderRepository.class
         );
         return storeOrderRepository;
+    }
+
+    public void orderComform() {
+        OrderAccepted orderAccepted = new OrderAccepted(this);
+        orderAccepted.publishAfterCommit();
+    }
+
+    public void orderReject() {
+        OrderRejected orderRejected = new OrderRejected(this);
+        orderRejected.publishAfterCommit();
+    }
+
+    public void beginCooking() {
+        BeginCooking beginCooking = new BeginCooking(this);
+        beginCooking.publishAfterCommit();
+    }
+
+    public void endCooking() {
+        EndCooking endCooking = new EndCooking(this);
+        endCooking.publishAfterCommit();
     }
 
     public static void orderInfoReceive(Paid paid) {

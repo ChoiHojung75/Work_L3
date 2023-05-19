@@ -42,8 +42,7 @@
                     @click="save"
                     v-else
             >
-                DeliveryStart
-                DeliveryEnd
+                Save
             </v-btn>
             <v-btn
                     color="deep-purple lighten-2"
@@ -64,6 +63,22 @@
         </v-card-actions>
         <v-card-actions>
             <v-spacer></v-spacer>
+            <v-btn
+                    v-if="!editMode"
+                    color="deep-purple lighten-2"
+                    text
+                    @click="deliveryStart"
+            >
+                DeliveryStart
+            </v-btn>
+            <v-btn
+                    v-if="!editMode"
+                    color="deep-purple lighten-2"
+                    text
+                    @click="deliveryEnd"
+            >
+                DeliveryEnd
+            </v-btn>
         </v-card-actions>
 
         <v-snackbar
@@ -194,6 +209,44 @@
             },
             change(){
                 this.$emit('input', this.value);
+            },
+            async deliveryStart() {
+                try {
+                    if(!this.offline) {
+                        var temp = await axios.put(axios.fixUrl(this.value._links['deliverystart'].href))
+                        for(var k in temp.data) {
+                            this.value[k]=temp.data[k];
+                        }
+                    }
+
+                    this.editMode = false;
+                } catch(e) {
+                    this.snackbar.status = true
+                    if(e.response && e.response.data.message) {
+                        this.snackbar.text = e.response.data.message
+                    } else {
+                        this.snackbar.text = e
+                    }
+                }
+            },
+            async deliveryEnd() {
+                try {
+                    if(!this.offline) {
+                        var temp = await axios.put(axios.fixUrl(this.value._links['deliveryend'].href))
+                        for(var k in temp.data) {
+                            this.value[k]=temp.data[k];
+                        }
+                    }
+
+                    this.editMode = false;
+                } catch(e) {
+                    this.snackbar.status = true
+                    if(e.response && e.response.data.message) {
+                        this.snackbar.text = e.response.data.message
+                    } else {
+                        this.snackbar.text = e
+                    }
+                }
             },
         },
     }

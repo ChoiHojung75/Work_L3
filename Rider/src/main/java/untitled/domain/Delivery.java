@@ -5,9 +5,7 @@ import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
 import untitled.RiderApplication;
-import untitled.domain.Deliveryended;
 import untitled.domain.Deliveryprepared;
-import untitled.domain.Deliverystarted;
 
 @Entity
 @Table(name = "Delivery_table")
@@ -36,12 +34,6 @@ public class Delivery {
     public void onPostPersist() {
         Deliveryprepared deliveryprepared = new Deliveryprepared(this);
         deliveryprepared.publishAfterCommit();
-
-        Deliverystarted deliverystarted = new Deliverystarted(this);
-        deliverystarted.publishAfterCommit();
-
-        Deliveryended deliveryended = new Deliveryended(this);
-        deliveryended.publishAfterCommit();
     }
 
     public static DeliveryRepository repository() {
@@ -49,6 +41,16 @@ public class Delivery {
             DeliveryRepository.class
         );
         return deliveryRepository;
+    }
+
+    public void deliveryStart() {
+        Deliverystarted deliverystarted = new Deliverystarted(this);
+        deliverystarted.publishAfterCommit();
+    }
+
+    public void deliveryEnd() {
+        Deliveryended deliveryended = new Deliveryended(this);
+        deliveryended.publishAfterCommit();
     }
 
     public static void deliveryPrepare(EndCooking endCooking) {

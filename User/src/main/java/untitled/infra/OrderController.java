@@ -17,4 +17,46 @@ public class OrderController {
 
     @Autowired
     OrderRepository orderRepository;
+
+    @RequestMapping(
+        value = "orders/{id}/payments",
+        method = RequestMethod.PUT,
+        produces = "application/json;charset=UTF-8"
+    )
+    public Order payments(
+        @PathVariable(value = "id") Long id,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws Exception {
+        System.out.println("##### /order/payments  called #####");
+        Optional<Order> optionalOrder = orderRepository.findById(id);
+
+        optionalOrder.orElseThrow(() -> new Exception("No Entity Found"));
+        Order order = optionalOrder.get();
+        order.payments();
+
+        orderRepository.save(order);
+        return order;
+    }
+
+    @RequestMapping(
+        value = "orders/{id}/ordercancel",
+        method = RequestMethod.PUT,
+        produces = "application/json;charset=UTF-8"
+    )
+    public Order orderCancel(
+        @PathVariable(value = "id") Long id,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws Exception {
+        System.out.println("##### /order/orderCancel  called #####");
+        Optional<Order> optionalOrder = orderRepository.findById(id);
+
+        optionalOrder.orElseThrow(() -> new Exception("No Entity Found"));
+        Order order = optionalOrder.get();
+        order.orderCancel();
+
+        orderRepository.save(order);
+        return order;
+    }
 }

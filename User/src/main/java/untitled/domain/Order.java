@@ -5,9 +5,7 @@ import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
 import untitled.UserApplication;
-import untitled.domain.Ordercancelled;
 import untitled.domain.Orderplaced;
-import untitled.domain.Paid;
 import untitled.domain.Paycancelled;
 
 @Entity
@@ -44,12 +42,6 @@ public class Order {
         Orderplaced orderplaced = new Orderplaced(this);
         orderplaced.publishAfterCommit();
 
-        Paid paid = new Paid(this);
-        paid.publishAfterCommit();
-
-        Ordercancelled ordercancelled = new Ordercancelled(this);
-        ordercancelled.publishAfterCommit();
-
         Paycancelled paycancelled = new Paycancelled(this);
         paycancelled.publishAfterCommit();
     }
@@ -59,6 +51,16 @@ public class Order {
             OrderRepository.class
         );
         return orderRepository;
+    }
+
+    public void payments() {
+        Paid paid = new Paid(this);
+        paid.publishAfterCommit();
+    }
+
+    public void orderCancel() {
+        Ordercancelled ordercancelled = new Ordercancelled(this);
+        ordercancelled.publishAfterCommit();
     }
 
     public static void paymentCancel(Ordercancelled ordercancelled) {
